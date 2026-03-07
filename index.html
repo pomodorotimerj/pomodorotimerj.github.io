@@ -2,18 +2,48 @@
 <!-- MIT License
 Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
 -->
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
- <meta name="description" content="Pomodoro Timer">
-    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
-    <title>Pomodoro Timer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Помодоро Таймер</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --text-primary: #fff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-bg-hover: rgba(255, 255, 255, 0.2);
+            --circle-bg: rgba(255, 255, 255, 0.03);
+            --ring-bg: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --panel-bg: rgba(26, 26, 46, 0.98);
+            --modal-bg: rgba(26, 26, 46, 0.95);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f0f4f8;
+            --bg-secondary: #e2e8f0;
+            --bg-tertiary: #cbd5e1;
+            --text-primary: #1e293b;
+            --text-secondary: rgba(30, 41, 59, 0.8);
+            --text-muted: rgba(30, 41, 59, 0.5);
+            --glass-bg: rgba(30, 41, 59, 0.1);
+            --glass-bg-hover: rgba(30, 41, 59, 0.15);
+            --circle-bg: rgba(30, 41, 59, 0.05);
+            --ring-bg: rgba(30, 41, 59, 0.15);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --panel-bg: rgba(240, 244, 248, 0.98);
+            --modal-bg: rgba(240, 244, 248, 0.95);
         }
 
         body {
@@ -22,8 +52,9 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
             overflow: hidden;
+            transition: background 0.3s ease;
         }
 
         .background-animation {
@@ -40,7 +71,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         .floating-circle {
             position: absolute;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--circle-bg);
             animation: float 20s infinite ease-in-out;
         }
 
@@ -75,22 +106,131 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             75% { transform: translate(20px, 10px) rotate(3deg); }
         }
 
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .header-btn {
+            background: var(--glass-bg);
+            border: none;
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-btn:hover {
+            background: var(--glass-bg-hover);
+            color: var(--text-primary);
+        }
+
+        .lang-selector {
+            position: relative;
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 5px;
+            background: var(--panel-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            min-width: 150px;
+        }
+
+        .lang-selector:hover .lang-dropdown,
+        .lang-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .lang-option {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lang-option:hover {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+        }
+
+        .lang-option.active {
+            background: var(--glass-bg-hover);
+            color: var(--text-primary);
+        }
+
         .container {
             position: relative;
             z-index: 1;
             text-align: center;
             padding: 40px;
+            padding-top: 80px;
+        }
+
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
         h1 {
-            color: #fff;
+            color: var(--text-primary);
             font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 20px var(--shadow-color);
+        }
+
+        .info-btn {
+            background: var(--glass-bg);
+            border: none;
+            color: var(--text-secondary);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-btn:hover {
+            background: var(--glass-bg-hover);
+            color: var(--text-primary);
+            transform: scale(1.1);
         }
 
         .subtitle {
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-muted);
             font-size: 1rem;
             margin-bottom: 40px;
         }
@@ -100,6 +240,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             justify-content: center;
             gap: 10px;
             margin-bottom: 40px;
+            flex-wrap: wrap;
         }
 
         .mode-btn {
@@ -109,13 +250,13 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
+            background: var(--glass-bg);
+            color: var(--text-secondary);
             backdrop-filter: blur(10px);
         }
 
         .mode-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--glass-bg-hover);
             transform: translateY(-2px);
         }
 
@@ -158,7 +299,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
 
         .timer-ring-bg {
             fill: none;
-            stroke: rgba(255, 255, 255, 0.1);
+            stroke: var(--ring-bg);
             stroke-width: 8;
         }
 
@@ -191,13 +332,13 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         .time {
             font-size: 4.5rem;
             font-weight: 300;
-            color: #fff;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            color: var(--text-primary);
+            text-shadow: 0 0 30px var(--shadow-color);
             letter-spacing: 4px;
         }
 
         .session-info {
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--text-muted);
             font-size: 0.9rem;
             margin-top: 10px;
         }
@@ -241,13 +382,13 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         }
 
         .secondary-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
+            background: var(--glass-bg);
+            color: var(--text-secondary);
             backdrop-filter: blur(10px);
         }
 
         .secondary-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--glass-bg-hover);
             transform: scale(1.1);
         }
 
@@ -265,24 +406,13 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         .stat-value {
             font-size: 2rem;
             font-weight: 600;
-            color: #fff;
+            color: var(--text-primary);
         }
 
         .stat-label {
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--text-muted);
             font-size: 0.85rem;
             margin-top: 5px;
-        }
-
-        .settings-toggle {
-            color: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: color 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .settings-toggle:hover {
-            color: rgba(255, 255, 255, 0.8);
         }
 
         .settings-panel {
@@ -291,7 +421,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             right: -400px;
             width: 350px;
             height: 100%;
-            background: rgba(26, 26, 46, 0.98);
+            background: var(--panel-bg);
             backdrop-filter: blur(20px);
             padding: 40px 30px;
             transition: right 0.4s ease;
@@ -311,21 +441,21 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         }
 
         .settings-title {
-            color: #fff;
+            color: var(--text-primary);
             font-size: 1.5rem;
         }
 
         .close-btn {
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--text-muted);
             font-size: 1.5rem;
             cursor: pointer;
             transition: color 0.3s ease;
         }
 
         .close-btn:hover {
-            color: #fff;
+            color: var(--text-primary);
         }
 
         .setting-group {
@@ -333,7 +463,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         }
 
         .setting-label {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-secondary);
             font-size: 0.9rem;
             margin-bottom: 10px;
             display: block;
@@ -344,15 +474,15 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             padding: 15px;
             border: none;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background: var(--glass-bg);
+            color: var(--text-primary);
             font-size: 1rem;
             outline: none;
             transition: background 0.3s ease;
         }
 
         .setting-input:focus {
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--glass-bg-hover);
         }
 
         .setting-toggle {
@@ -365,7 +495,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             position: relative;
             width: 50px;
             height: 26px;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--glass-bg);
             border-radius: 13px;
             cursor: pointer;
             transition: background 0.3s ease;
@@ -412,18 +542,18 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         .notification {
             position: fixed;
             top: 20px;
-            right: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-150%);
             padding: 20px 30px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            transform: translateX(150%);
             transition: transform 0.4s ease;
             z-index: 200;
         }
 
         .notification.show {
-            transform: translateX(0);
+            transform: translateX(-50%) translateY(0);
         }
 
         .notification-title {
@@ -435,6 +565,211 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         .notification-message {
             color: #666;
             font-size: 0.9rem;
+        }
+
+        /* Modal Popup Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 300;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--modal-bg);
+            border-radius: 20px;
+            padding: 30px 40px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.8) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-bg);
+        }
+
+        .modal-overlay.visible .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .modal-title {
+            color: var(--text-primary);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .modal-message {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .modal-btn-cancel {
+            background: var(--glass-bg);
+            color: var(--text-secondary);
+        }
+
+        .modal-btn-cancel:hover {
+            background: var(--glass-bg-hover);
+            color: var(--text-primary);
+        }
+
+        .modal-btn-confirm {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            color: white;
+            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .modal-btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.5);
+        }
+
+        .modal-btn-confirm.warning {
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .modal-btn-confirm.warning:hover {
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.5);
+        }
+
+        /* Info Modal Styles */
+        .info-modal {
+            max-width: 550px;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        .info-modal .modal-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-section-title {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-section-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .info-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .info-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00b894;
+            font-weight: bold;
+        }
+
+        .info-steps {
+            counter-reset: step;
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .info-steps li {
+            padding: 10px 0;
+            padding-left: 35px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .info-steps li::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .info-modal .modal-buttons {
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        .info-modal .modal-btn-confirm {
+            background: linear-gradient(135deg, #00b894, #55efc4);
+            box-shadow: 0 5px 20px rgba(0, 184, 148, 0.4);
+        }
+
+        .info-modal .modal-btn-confirm:hover {
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.5);
         }
 
         @keyframes pulse {
@@ -464,6 +799,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         @media (max-width: 480px) {
             .container {
                 padding: 20px;
+                padding-top: 80px;
             }
 
             h1 {
@@ -492,6 +828,33 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
                 width: 100%;
                 right: -100%;
             }
+
+            .header {
+                padding: 15px 20px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .header-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+
+            .modal {
+                padding: 25px 20px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+
+            .modal-btn {
+                width: 100%;
+            }
+
+            .info-modal {
+                max-height: 70vh;
+            }
         }
     </style>
 </head>
@@ -502,14 +865,43 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         <div class="floating-circle"></div>
     </div>
 
+    <div class="header">
+        <div class="lang-selector">
+            <button class="header-btn" id="langBtn">
+                <span id="langIcon">🇺🇦</span>
+                <span id="langText">UA</span>
+            </button>
+            <div class="lang-dropdown" id="langDropdown">
+                <div class="lang-option active" data-lang="uk">
+                    <span>🇺🇦</span>
+                    <span>Українська</span>
+                </div>
+                <div class="lang-option" data-lang="en">
+                    <span>🇬🇧</span>
+                    <span>English</span>
+                </div>
+            </div>
+        </div>
+        <button class="header-btn" id="themeToggle">
+            <span id="themeIcon">☀️</span>
+            <span id="themeText">Світла</span>
+        </button>
+        <button class="header-btn" id="settingsToggle">
+            ⚙️ <span data-i18n="settings">Налаштування</span>
+        </button>
+    </div>
+
     <div class="container">
-        <h1><span class="tomato-icon">🍅</span>Pomodoro Timer</h1>
-        <p class="subtitle">Stay focused, be productive</p>
+        <div class="title-container">
+            <h1><span class="tomato-icon">🍅</span><span data-i18n="title">Помодоро Таймер</span></h1>
+            <button class="info-btn" id="infoBtn" title="Що таке Помодоро?">ℹ️</button>
+        </div>
+        <p class="subtitle" data-i18n="subtitle">Зосередься та будь продуктивним</p>
 
         <div class="mode-selector">
-            <button class="mode-btn active" data-mode="work">Focus</button>
-            <button class="mode-btn" data-mode="break">Short Break</button>
-            <button class="mode-btn" data-mode="longBreak">Long Break</button>
+            <button class="mode-btn active" data-mode="work" data-i18n="focus">Фокус</button>
+            <button class="mode-btn" data-mode="break" data-i18n="shortBreak">Коротка перерва</button>
+            <button class="mode-btn" data-mode="longBreak" data-i18n="longBreak">Довга перерва</button>
         </div>
 
         <div class="timer-container" id="timerContainer">
@@ -535,80 +927,259 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             </div>
             <div class="timer-display" id="timerDisplay">
                 <div class="time" id="timeDisplay">25:00</div>
-                <div class="session-info" id="sessionInfo">Session 1 of 4</div>
+                <div class="session-info" id="sessionInfo">Сесія 1 з 4</div>
             </div>
         </div>
 
         <div class="controls">
-            <button class="control-btn secondary-btn" id="resetBtn" title="Reset">↺</button>
-            <button class="control-btn play-btn" id="playBtn" title="Start">▶</button>
-            <button class="control-btn secondary-btn" id="skipBtn" title="Skip">⏭</button>
+            <button class="control-btn secondary-btn" id="resetBtn" title="Скинути">↺</button>
+            <button class="control-btn play-btn" id="playBtn" title="Старт">▶</button>
+            <button class="control-btn secondary-btn" id="skipBtn" title="Пропустити">⏭</button>
         </div>
 
         <div class="stats">
             <div class="stat-item">
                 <div class="stat-value" id="completedPomodoros">0</div>
-                <div class="stat-label">Pomodoros</div>
+                <div class="stat-label" data-i18n="pomodoros">Помодоро</div>
             </div>
             <div class="stat-item">
-                <div class="stat-value" id="totalFocusTime">0m</div>
-                <div class="stat-label">Focus Time</div>
+                <div class="stat-value" id="totalFocusTime">0хв</div>
+                <div class="stat-label" data-i18n="focusTime">Час фокусу</div>
             </div>
         </div>
-
-        <div class="settings-toggle" id="settingsToggle">⚙️ Settings</div>
     </div>
 
     <div class="overlay" id="overlay"></div>
 
     <div class="settings-panel" id="settingsPanel">
         <div class="settings-header">
-            <h2 class="settings-title">Settings</h2>
+            <h2 class="settings-title" data-i18n="settings">Налаштування</h2>
             <button class="close-btn" id="closeSettings">×</button>
         </div>
 
         <div class="setting-group">
-            <label class="setting-label">Focus Duration (minutes)</label>
+            <label class="setting-label" data-i18n="focusDuration">Тривалість фокусу (хвилини)</label>
             <input type="number" class="setting-input" id="workDuration" min="1" max="60" value="25">
         </div>
 
         <div class="setting-group">
-            <label class="setting-label">Short Break (minutes)</label>
+            <label class="setting-label" data-i18n="shortBreakDuration">Коротка перерва (хвилини)</label>
             <input type="number" class="setting-input" id="breakDuration" min="1" max="30" value="5">
         </div>
 
         <div class="setting-group">
-            <label class="setting-label">Long Break (minutes)</label>
+            <label class="setting-label" data-i18n="longBreakDuration">Довга перерва (хвилини)</label>
             <input type="number" class="setting-input" id="longBreakDuration" min="1" max="60" value="15">
         </div>
 
         <div class="setting-group">
-            <label class="setting-label">Sessions until Long Break</label>
+            <label class="setting-label" data-i18n="sessionsUntilLongBreak">Сесій до довгої перерви</label>
             <input type="number" class="setting-input" id="sessionsUntilLongBreak" min="2" max="10" value="4">
         </div>
 
         <div class="setting-group setting-toggle">
-            <span class="setting-label" style="margin-bottom: 0;">Sound Notifications</span>
+            <span class="setting-label" style="margin-bottom: 0;" data-i18n="soundNotifications">Звукові сповіщення</span>
             <div class="toggle-switch active" id="soundToggle"></div>
         </div>
 
         <div class="setting-group setting-toggle">
-            <span class="setting-label" style="margin-bottom: 0;">Auto-start Breaks</span>
+            <span class="setting-label" style="margin-bottom: 0;" data-i18n="autoStartBreaks">Автозапуск перерв</span>
             <div class="toggle-switch" id="autoStartBreaks"></div>
         </div>
 
         <div class="setting-group setting-toggle">
-            <span class="setting-label" style="margin-bottom: 0;">Auto-start Pomodoros</span>
+            <span class="setting-label" style="margin-bottom: 0;" data-i18n="autoStartPomodoros">Автозапуск помодоро</span>
             <div class="toggle-switch" id="autoStartPomodoros"></div>
         </div>
     </div>
 
     <div class="notification" id="notification">
-        <div class="notification-title" id="notificationTitle">Time's up!</div>
-        <div class="notification-message" id="notificationMessage">Take a break!</div>
+        <div class="notification-title" id="notificationTitle">Час вийшов!</div>
+        <div class="notification-message" id="notificationMessage">Час перерви!</div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <span class="modal-icon" id="modalIcon">⚠️</span>
+            <h3 class="modal-title" id="modalTitle">Підтвердження</h3>
+            <p class="modal-message" id="modalMessage">Ви впевнені?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" id="modalCancel">Скасувати</button>
+                <button class="modal-btn modal-btn-confirm" id="modalConfirm">Підтвердити</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal-overlay" id="infoModalOverlay">
+        <div class="modal info-modal">
+            <span class="modal-icon">🍅</span>
+            <h3 class="modal-title" data-i18n="infoTitle">Що таке техніка Помодоро?</h3>
+            
+            <div class="info-section">
+                <div class="info-section-title">
+                    <span>📖</span>
+                    <span data-i18n="infoAboutTitle">Про техніку</span>
+                </div>
+                <div class="info-section-content" data-i18n="infoAboutContent">
+                    Техніка Помодоро — це метод управління часом, розроблений Франческо Чіріло наприкінці 1980-х років. Назва походить від кухонного таймера у формі помідора (італійською "pomodoro"), який Чіріло використовував під час навчання в університеті.
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-section-title">
+                    <span>🎯</span>
+                    <span data-i18n="infoHowTitle">Як це працює</span>
+                </div>
+                <ol class="info-steps">
+                    <li data-i18n="infoStep1">Оберіть завдання для виконання</li>
+                    <li data-i18n="infoStep2">Встановіть таймер на 25 хвилин (один "помодоро")</li>
+                    <li data-i18n="infoStep3">Працюйте над завданням до сигналу таймера</li>
+                    <li data-i18n="infoStep4">Зробіть коротку перерву 5 хвилин</li>
+                    <li data-i18n="infoStep5">Після 4 помодоро зробіть довгу перерву 15-30 хвилин</li>
+                </ol>
+            </div>
+
+            <div class="info-section">
+                <div class="info-section-title">
+                    <span>✨</span>
+                    <span data-i18n="infoBenefitsTitle">Переваги</span>
+                </div>
+                <ul class="info-list">
+                    <li data-i18n="infoBenefit1">Покращує концентрацію та фокус</li>
+                    <li data-i18n="infoBenefit2">Зменшує розумову втому</li>
+                    <li data-i18n="infoBenefit3">Підвищує продуктивність</li>
+                    <li data-i18n="infoBenefit4">Допомагає боротися з прокрастинацією</li>
+                    <li data-i18n="infoBenefit5">Покращує планування та оцінку часу</li>
+                </ul>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-confirm" id="infoModalClose" data-i18n="infoGotIt">Зрозуміло!</button>
+            </div>
+        </div>
     </div>
 
     <script>
+        // Translations
+        const translations = {
+            uk: {
+                title: 'Помодоро Таймер',
+                subtitle: 'Зосередься та будь продуктивним',
+                focus: 'Фокус',
+                shortBreak: 'Коротка перерва',
+                longBreak: 'Довга перерва',
+                settings: 'Налаштування',
+                pomodoros: 'Помодоро',
+                focusTime: 'Час фокусу',
+                focusDuration: 'Тривалість фокусу (хвилини)',
+                shortBreakDuration: 'Коротка перерва (хвилини)',
+                longBreakDuration: 'Довга перерва (хвилини)',
+                sessionsUntilLongBreak: 'Сесій до довгої перерви',
+                soundNotifications: 'Звукові сповіщення',
+                autoStartBreaks: 'Автозапуск перерв',
+                autoStartPomodoros: 'Автозапуск помодоро',
+                sessionOf: 'Сесія {current} з {total}',
+                timeUp: 'Час вийшов!',
+                takeBreak: 'Час перерви!',
+                greatWork: 'Чудова робота!',
+                longBreakTime: 'Час довгої перерви!',
+                pomodoroComplete: 'Помодоро завершено!',
+                shortBreakTime: 'Час короткої перерви!',
+                breakOver: 'Перерва закінчилась!',
+                readyToFocus: 'Готові зосередитись?',
+                skipSession: 'Пропустити сесію?',
+                skipMessage: 'Ви впевнені, що хочете пропустити цю сесію? Ваш поточний прогрес буде втрачено.',
+                keepGoing: 'Продовжити',
+                skip: 'Пропустити',
+                switchMode: 'Змінити режим?',
+                switchMessage: 'Перехід до "{mode}" скине поточний таймер. Ваш прогрес цієї сесії буде втрачено.',
+                stayHere: 'Залишитись',
+                switch: 'Змінити',
+                light: 'Світла',
+                dark: 'Темна',
+                reset: 'Скинути',
+                start: 'Старт',
+                skipBtn: 'Пропустити',
+                minuteShort: 'хв',
+                hourShort: 'год',
+                infoTitle: 'Що таке техніка Помодоро?',
+                infoAboutTitle: 'Про техніку',
+                infoAboutContent: 'Техніка Помодоро — це метод управління часом, розроблений Франческо Чіріло наприкінці 1980-х років. Назва походить від кухонного таймера у формі помідора (італійською "pomodoro"), який Чіріло використовував під час навчання в університеті.',
+                infoHowTitle: 'Як це працює',
+                infoStep1: 'Оберіть завдання для виконання',
+                infoStep2: 'Встановіть таймер на 25 хвилин (один "помодоро")',
+                infoStep3: 'Працюйте над завданням до сигналу таймера',
+                infoStep4: 'Зробіть коротку перерву 5 хвилин',
+                infoStep5: 'Після 4 помодоро зробіть довгу перерву 15-30 хвилин',
+                infoBenefitsTitle: 'Переваги',
+                infoBenefit1: 'Покращує концентрацію та фокус',
+                infoBenefit2: 'Зменшує розумову втому',
+                infoBenefit3: 'Підвищує продуктивність',
+                infoBenefit4: 'Допомагає боротися з прокрастинацією',
+                infoBenefit5: 'Покращує планування та оцінку часу',
+                infoGotIt: 'Зрозуміло!'
+            },
+            en: {
+                title: 'Pomodoro Timer',
+                subtitle: 'Stay focused, be productive',
+                focus: 'Focus',
+                shortBreak: 'Short Break',
+                longBreak: 'Long Break',
+                settings: 'Settings',
+                pomodoros: 'Pomodoros',
+                focusTime: 'Focus Time',
+                focusDuration: 'Focus Duration (minutes)',
+                shortBreakDuration: 'Short Break (minutes)',
+                longBreakDuration: 'Long Break (minutes)',
+                sessionsUntilLongBreak: 'Sessions until Long Break',
+                soundNotifications: 'Sound Notifications',
+                autoStartBreaks: 'Auto-start Breaks',
+                autoStartPomodoros: 'Auto-start Pomodoros',
+                sessionOf: 'Session {current} of {total}',
+                timeUp: "Time's up!",
+                takeBreak: 'Take a break!',
+                greatWork: 'Great work!',
+                longBreakTime: 'Time for a long break!',
+                pomodoroComplete: 'Pomodoro complete!',
+                shortBreakTime: 'Time for a short break!',
+                breakOver: 'Break over!',
+                readyToFocus: 'Ready to focus?',
+                skipSession: 'Skip Session?',
+                skipMessage: 'Are you sure you want to skip this session? Your current progress will be lost.',
+                keepGoing: 'Keep Going',
+                skip: 'Skip',
+                switchMode: 'Switch Mode?',
+                switchMessage: 'Switching to "{mode}" will reset the current timer. Your progress on this session will be lost.',
+                stayHere: 'Stay Here',
+                switch: 'Switch',
+                light: 'Light',
+                dark: 'Dark',
+                reset: 'Reset',
+                start: 'Start',
+                skipBtn: 'Skip',
+                minuteShort: 'm',
+                hourShort: 'h',
+                infoTitle: 'What is the Pomodoro Technique?',
+                infoAboutTitle: 'About the Technique',
+                infoAboutContent: 'The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s. The name comes from the tomato-shaped kitchen timer (Italian: "pomodoro") that Cirillo used while studying at university.',
+                infoHowTitle: 'How It Works',
+                infoStep1: 'Choose a task to work on',
+                infoStep2: 'Set the timer for 25 minutes (one "pomodoro")',
+                infoStep3: 'Work on the task until the timer rings',
+                infoStep4: 'Take a short 5-minute break',
+                infoStep5: 'After 4 pomodoros, take a longer 15-30 minute break',
+                infoBenefitsTitle: 'Benefits',
+                infoBenefit1: 'Improves concentration and focus',
+                infoBenefit2: 'Reduces mental fatigue',
+                infoBenefit3: 'Increases productivity',
+                infoBenefit4: 'Helps fight procrastination',
+                infoBenefit5: 'Improves planning and time estimation',
+                infoGotIt: 'Got it!'
+            }
+        };
+
         // Audio context for sound notifications
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioContext = null;
@@ -631,10 +1202,9 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             gainNode.connect(audioContext.destination);
             
             if (type === 'complete') {
-                // Pleasant completion sound
-                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
-                oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
-                oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2);
                 gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
                 oscillator.start(audioContext.currentTime);
@@ -656,6 +1226,9 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             currentSession: 1,
             completedPomodoros: 0,
             totalFocusTime: 0,
+            lastTickTime: null,
+            theme: 'dark',
+            language: 'uk',
             settings: {
                 workDuration: 25,
                 breakDuration: 5,
@@ -669,6 +1242,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
 
         let state = loadState();
         let timerInterval = null;
+        let modalResolve = null;
 
         // DOM Elements
         const timeDisplay = document.getElementById('timeDisplay');
@@ -689,6 +1263,25 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         const notificationTitle = document.getElementById('notificationTitle');
         const notificationMessage = document.getElementById('notificationMessage');
         const modeBtns = document.querySelectorAll('.mode-btn');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const infoBtn = document.getElementById('infoBtn');
+        const infoModalOverlay = document.getElementById('infoModalOverlay');
+        const infoModalClose = document.getElementById('infoModalClose');
+        const langBtn = document.getElementById('langBtn');
+        const langDropdown = document.getElementById('langDropdown');
+        const langOptions = document.querySelectorAll('.lang-option');
+        const langIcon = document.getElementById('langIcon');
+        const langText = document.getElementById('langText');
+
+        // Modal Elements
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalCancel = document.getElementById('modalCancel');
+        const modalConfirm = document.getElementById('modalConfirm');
 
         // Settings inputs
         const workDurationInput = document.getElementById('workDuration');
@@ -698,6 +1291,123 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         const soundToggle = document.getElementById('soundToggle');
         const autoStartBreaksToggle = document.getElementById('autoStartBreaks');
         const autoStartPomodorosToggle = document.getElementById('autoStartPomodoros');
+
+        // Translation function
+        function t(key, replacements = {}) {
+            let text = translations[state.language][key] || translations['en'][key] || key;
+            Object.keys(replacements).forEach(k => {
+                text = text.replace(`{${k}}`, replacements[k]);
+            });
+            return text;
+        }
+
+        function applyLanguage() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                el.textContent = t(key);
+            });
+
+            // Update dynamic elements
+            document.documentElement.lang = state.language;
+            document.title = t('title');
+            
+            // Update button titles
+            resetBtn.title = t('reset');
+            playBtn.title = t('start');
+            skipBtn.title = t('skipBtn');
+            infoBtn.title = t('infoTitle');
+
+            // Update language selector
+            if (state.language === 'uk') {
+                langIcon.textContent = '🇺🇦';
+                langText.textContent = 'UA';
+            } else {
+                langIcon.textContent = '🇬🇧';
+                langText.textContent = 'EN';
+            }
+
+            // Update active language option
+            langOptions.forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.lang === state.language);
+            });
+
+            // Update theme text
+            themeText.textContent = state.theme === 'light' ? t('dark') : t('light');
+
+            updateDisplay();
+        }
+
+        // Modal Functions
+        function showModal(options) {
+            return new Promise((resolve) => {
+                modalResolve = resolve;
+                modalIcon.textContent = options.icon || '⚠️';
+                modalTitle.textContent = options.title || t('skipSession');
+                modalMessage.textContent = options.message || t('skipMessage');
+                modalCancel.textContent = options.cancelText || t('keepGoing');
+                modalConfirm.textContent = options.confirmText || t('skip');
+                
+                if (options.warning) {
+                    modalConfirm.classList.add('warning');
+                } else {
+                    modalConfirm.classList.remove('warning');
+                }
+                
+                modalOverlay.classList.add('visible');
+            });
+        }
+
+        function hideModal(result) {
+            modalOverlay.classList.remove('visible');
+            if (modalResolve) {
+                modalResolve(result);
+                modalResolve = null;
+            }
+        }
+
+        modalCancel.addEventListener('click', () => hideModal(false));
+        modalConfirm.addEventListener('click', () => hideModal(true));
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                hideModal(false);
+            }
+        });
+
+        // Info Modal Functions
+        function showInfoModal() {
+            infoModalOverlay.classList.add('visible');
+        }
+
+        function hideInfoModal() {
+            infoModalOverlay.classList.remove('visible');
+        }
+
+        infoBtn.addEventListener('click', showInfoModal);
+        infoModalClose.addEventListener('click', hideInfoModal);
+        infoModalOverlay.addEventListener('click', (e) => {
+            if (e.target === infoModalOverlay) {
+                hideInfoModal();
+            }
+        });
+
+        // Language Functions
+        langBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown.classList.toggle('show');
+        });
+
+        langOptions.forEach(opt => {
+            opt.addEventListener('click', () => {
+                state.language = opt.dataset.lang;
+                langDropdown.classList.remove('show');
+                applyLanguage();
+                saveState();
+            });
+        });
+
+        document.addEventListener('click', () => {
+            langDropdown.classList.remove('show');
+        });
 
         // Functions
         function loadState() {
@@ -710,6 +1420,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         }
 
         function saveState() {
+            state.lastTickTime = Date.now();
             localStorage.setItem('pomodoroState', JSON.stringify(state));
         }
 
@@ -720,10 +1431,12 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         }
 
         function formatFocusTime(minutes) {
-            if (minutes < 60) return `${minutes}m`;
+            const minShort = t('minuteShort');
+            const hourShort = t('hourShort');
+            if (minutes < 60) return `${minutes}${minShort}`;
             const hours = Math.floor(minutes / 60);
             const mins = minutes % 60;
-            return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+            return mins > 0 ? `${hours}${hourShort} ${mins}${minShort}` : `${hours}${hourShort}`;
         }
 
         function getTotalTime() {
@@ -735,6 +1448,23 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             }
         }
 
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', state.theme);
+            if (state.theme === 'light') {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = t('dark');
+            } else {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = t('light');
+            }
+        }
+
+        function toggleTheme() {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            applyTheme();
+            saveState();
+        }
+
         function updateDisplay() {
             timeDisplay.textContent = formatTime(state.timeRemaining);
             
@@ -744,7 +1474,6 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             const offset = circumference * (1 - progress);
             progressRing.style.strokeDashoffset = offset;
 
-            // Update progress ring color class
             progressRing.classList.remove('break', 'long-break');
             if (state.currentMode === 'break') {
                 progressRing.classList.add('break');
@@ -752,7 +1481,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
                 progressRing.classList.add('long-break');
             }
 
-            sessionInfo.textContent = `Session ${state.currentSession} of ${state.settings.sessionsUntilLongBreak}`;
+            sessionInfo.textContent = t('sessionOf', { current: state.currentSession, total: state.settings.sessionsUntilLongBreak });
             completedPomodorosEl.textContent = state.completedPomodoros;
             totalFocusTimeEl.textContent = formatFocusTime(state.totalFocusTime);
 
@@ -760,7 +1489,6 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             playBtn.classList.toggle('running', state.isRunning);
             timerDisplay.classList.toggle('running', state.isRunning);
 
-            // Update mode buttons
             modeBtns.forEach(btn => {
                 btn.classList.remove('active', 'break', 'long-break');
                 if (btn.dataset.mode === state.currentMode) {
@@ -770,8 +1498,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
                 }
             });
 
-            // Update page title
-            document.title = `${formatTime(state.timeRemaining)} - Pomodoro Timer`;
+            document.title = `${formatTime(state.timeRemaining)} - ${t('title')}`;
 
             saveState();
         }
@@ -781,6 +1508,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             
             initAudio();
             state.isRunning = true;
+            state.lastTickTime = Date.now();
             
             timerInterval = setInterval(() => {
                 state.timeRemaining--;
@@ -818,11 +1546,11 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
                 state.totalFocusTime += state.settings.workDuration;
                 
                 if (state.currentSession >= state.settings.sessionsUntilLongBreak) {
-                    showNotification('Great work!', 'Time for a long break!');
+                    showNotification(t('greatWork'), t('longBreakTime'));
                     switchMode('longBreak');
                     state.currentSession = 1;
                 } else {
-                    showNotification('Pomodoro complete!', 'Time for a short break!');
+                    showNotification(t('pomodoroComplete'), t('shortBreakTime'));
                     switchMode('break');
                     state.currentSession++;
                 }
@@ -831,7 +1559,7 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
                     setTimeout(startTimer, 1000);
                 }
             } else {
-                showNotification('Break over!', 'Ready to focus?');
+                showNotification(t('breakOver'), t('readyToFocus'));
                 switchMode('work');
                 
                 if (state.settings.autoStartPomodoros) {
@@ -850,9 +1578,44 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             updateDisplay();
         }
 
-        function skipSession() {
-            if (confirm('Skip this session?')) {
+        async function skipSession() {
+            const result = await showModal({
+                icon: '⏭️',
+                title: t('skipSession'),
+                message: t('skipMessage'),
+                cancelText: t('keepGoing'),
+                confirmText: t('skip'),
+                warning: true
+            });
+            
+            if (result) {
                 completeSession();
+            }
+        }
+
+        async function handleModeSwitch(mode) {
+            if (!state.isRunning) {
+                switchMode(mode);
+            } else {
+                const modeNames = {
+                    work: t('focus'),
+                    break: t('shortBreak'),
+                    longBreak: t('longBreak')
+                };
+                
+                const result = await showModal({
+                    icon: '🔄',
+                    title: t('switchMode'),
+                    message: t('switchMessage', { mode: modeNames[mode] }),
+                    cancelText: t('stayHere'),
+                    confirmText: t('switch'),
+                    warning: true
+                });
+                
+                if (result) {
+                    pauseTimer();
+                    switchMode(mode);
+                }
             }
         }
 
@@ -865,7 +1628,6 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
                 notification.classList.remove('show');
             }, 4000);
 
-            // Browser notification
             if (Notification.permission === 'granted') {
                 new Notification(title, { body: message, icon: '🍅' });
             }
@@ -875,7 +1637,6 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             settingsPanel.classList.add('open');
             overlay.classList.add('visible');
             
-            // Load current settings
             workDurationInput.value = state.settings.workDuration;
             breakDurationInput.value = state.settings.breakDuration;
             longBreakDurationInput.value = state.settings.longBreakDuration;
@@ -889,19 +1650,31 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             settingsPanel.classList.remove('open');
             overlay.classList.remove('visible');
             
-            // Save settings
             state.settings.workDuration = parseInt(workDurationInput.value) || 25;
             state.settings.breakDuration = parseInt(breakDurationInput.value) || 5;
             state.settings.longBreakDuration = parseInt(longBreakDurationInput.value) || 15;
             state.settings.sessionsUntilLongBreak = parseInt(sessionsInput.value) || 4;
             
-            // Reset timer if not running
             if (!state.isRunning) {
                 state.timeRemaining = getTotalTime();
             }
             
             saveState();
             updateDisplay();
+        }
+
+        function resumeTimerFromStorage() {
+            if (state.isRunning && state.lastTickTime) {
+                const elapsedSeconds = Math.floor((Date.now() - state.lastTickTime) / 1000);
+                state.timeRemaining = Math.max(0, state.timeRemaining - elapsedSeconds);
+                
+                if (state.timeRemaining <= 0) {
+                    completeSession();
+                } else {
+                    state.isRunning = false;
+                    startTimer();
+                }
+            }
         }
 
         // Event Listeners
@@ -915,15 +1688,11 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
 
         resetBtn.addEventListener('click', resetTimer);
         skipBtn.addEventListener('click', skipSession);
+        themeToggle.addEventListener('click', toggleTheme);
 
         modeBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                if (!state.isRunning) {
-                    switchMode(btn.dataset.mode);
-                } else if (confirm('Switch mode? This will reset the current timer.')) {
-                    pauseTimer();
-                    switchMode(btn.dataset.mode);
-                }
+                handleModeSwitch(btn.dataset.mode);
             });
         });
 
@@ -949,14 +1718,29 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             autoStartPomodorosToggle.classList.toggle('active', state.settings.autoStartPomodoros);
         });
 
-        // Request notification permission
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
         }
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT') return;
+            
+            // Handle modals
+            if (modalOverlay.classList.contains('visible')) {
+                if (e.code === 'Enter') {
+                    hideModal(true);
+                } else if (e.code === 'Escape') {
+                    hideModal(false);
+                }
+                return;
+            }
+
+            if (infoModalOverlay.classList.contains('visible')) {
+                if (e.code === 'Escape' || e.code === 'Enter') {
+                    hideInfoModal();
+                }
+                return;
+            }
             
             switch (e.code) {
                 case 'Space':
@@ -970,10 +1754,31 @@ Copyright (c) 2025 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
                 case 'KeyS':
                     skipSession();
                     break;
+                case 'KeyI':
+                    showInfoModal();
+                    break;
+            }
+        });
+
+        // Handle visibility change to keep timer accurate
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && state.isRunning) {
+                const elapsedSeconds = Math.floor((Date.now() - state.lastTickTime) / 1000);
+                if (elapsedSeconds > 1) {
+                    state.timeRemaining = Math.max(0, state.timeRemaining - elapsedSeconds + 1);
+                    if (state.timeRemaining <= 0) {
+                        completeSession();
+                    } else {
+                        updateDisplay();
+                    }
+                }
             }
         });
 
         // Initialize
+        applyTheme();
+        applyLanguage();
+        resumeTimerFromStorage();
         updateDisplay();
     </script>
 </body>
