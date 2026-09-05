@@ -49,7 +49,7 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         }
 
         html {
-            font-size: 15px;
+            font-size: 14px;
         }
 
         body {
@@ -117,11 +117,11 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             top: 0;
             left: 0;
             right: 0;
-            padding: 16px 24px;
+            padding: 14px 20px;
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             z-index: 10;
         }
 
@@ -129,20 +129,28 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             background: var(--glass-bg);
             border: none;
             color: var(--text-secondary);
-            padding: 9px 14px;
+            padding: 8px 14px;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.85rem;
             backdrop-filter: blur(10px);
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
+            white-space: nowrap;
+            line-height: 1;
+            height: 38px;
         }
 
         .header-btn:hover {
             background: var(--glass-bg-hover);
             color: var(--text-primary);
+        }
+
+        .header-btn span {
+            display: inline-flex;
+            align-items: center;
         }
 
         .lang-selector {
@@ -153,16 +161,17 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             position: absolute;
             top: 100%;
             right: 0;
-            margin-top: 5px;
+            margin-top: 6px;
             background: var(--panel-bg);
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s ease;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            min-width: 150px;
+            min-width: 160px;
+            border: 1px solid var(--glass-bg);
         }
 
         .lang-selector:hover .lang-dropdown,
@@ -173,13 +182,14 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         }
 
         .lang-option {
-            padding: 12px 20px;
+            padding: 11px 18px;
             cursor: pointer;
             transition: background 0.3s ease;
             color: var(--text-secondary);
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 0.9rem;
         }
 
         .lang-option:hover {
@@ -196,8 +206,8 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             position: relative;
             z-index: 1;
             text-align: center;
-            padding: 24px 40px;
-            padding-top: 70px;
+            padding: 20px 40px;
+            padding-top: 66px;
             max-height: 100vh;
         }
 
@@ -206,12 +216,12 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         h1 {
             color: var(--text-primary);
-            font-size: 2.2rem;
+            font-size: 2rem;
             text-shadow: 0 0 20px var(--shadow-color);
         }
 
@@ -219,12 +229,12 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             background: var(--glass-bg);
             border: none;
             color: var(--text-secondary);
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1rem;
+            font-size: 0.95rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -239,22 +249,22 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         .subtitle {
             color: var(--text-muted);
             font-size: 0.95rem;
-            margin-bottom: 28px;
+            margin-bottom: 22px;
         }
 
         .mode-selector {
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 28px;
+            margin-bottom: 22px;
             flex-wrap: wrap;
         }
 
         .mode-btn {
-            padding: 11px 22px;
+            padding: 10px 20px;
             border: none;
             border-radius: 30px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s ease;
             background: var(--glass-bg);
@@ -285,9 +295,9 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
 
         .timer-container {
             position: relative;
-            width: 300px;
-            height: 300px;
-            margin: 0 auto 28px;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 22px;
         }
 
         .timer-ring {
@@ -337,7 +347,7 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         }
 
         .time {
-            font-size: 4.2rem;
+            font-size: 4rem;
             font-weight: 300;
             color: var(--text-primary);
             text-shadow: 0 0 30px var(--shadow-color);
@@ -354,12 +364,12 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-bottom: 28px;
+            margin-bottom: 22px;
         }
 
         .control-btn {
-            width: 58px;
-            height: 58px;
+            width: 56px;
+            height: 56px;
             border: none;
             border-radius: 50%;
             cursor: pointer;
@@ -371,8 +381,8 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         }
 
         .play-btn {
-            width: 76px;
-            height: 76px;
+            width: 72px;
+            height: 72px;
             background: linear-gradient(135deg, #e94560, #ff6b6b);
             color: white;
             box-shadow: 0 10px 40px rgba(233, 69, 96, 0.5);
@@ -410,7 +420,7 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         }
 
         .stat-value {
-            font-size: 1.9rem;
+            font-size: 1.8rem;
             font-weight: 600;
             color: var(--text-primary);
         }
@@ -803,7 +813,23 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         }
 
         /* Larger desktop screens - scale up gracefully */
-        @media (min-width: 1200px) and (min-height: 800px) {
+        @media (min-width: 1200px) and (min-height: 820px) {
+            html {
+                font-size: 15px;
+            }
+
+            .timer-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .container {
+                padding-top: 72px;
+            }
+        }
+
+        /* Very large / high desktop screens */
+        @media (min-width: 1440px) and (min-height: 940px) {
             html {
                 font-size: 16px;
             }
@@ -817,29 +843,29 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
         /* Short screens - compact layout to avoid overflow */
         @media (max-height: 720px) {
             .container {
-                padding-top: 60px;
+                padding-top: 58px;
             }
 
             .subtitle {
-                margin-bottom: 18px;
+                margin-bottom: 16px;
             }
 
             .mode-selector {
-                margin-bottom: 18px;
+                margin-bottom: 16px;
             }
 
             .timer-container {
-                width: 240px;
-                height: 240px;
-                margin-bottom: 18px;
+                width: 230px;
+                height: 230px;
+                margin-bottom: 16px;
             }
 
             .time {
-                font-size: 3.4rem;
+                font-size: 3.2rem;
             }
 
             .controls {
-                margin-bottom: 18px;
+                margin-bottom: 16px;
             }
         }
 
@@ -881,14 +907,16 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             }
 
             .header {
-                padding: 15px 20px;
+                padding: 12px 16px;
                 flex-wrap: wrap;
-                gap: 10px;
+                gap: 8px;
+                justify-content: center;
             }
 
             .header-btn {
                 padding: 8px 12px;
                 font-size: 0.8rem;
+                height: 36px;
             }
 
             .modal {
@@ -938,7 +966,7 @@ Copyright (c) 2025-2026 Yuliya Kolesnikova <0009-0000-6151-7415@orcid.org>
             <span id="themeText">Світла</span>
         </button>
         <button class="header-btn" id="settingsToggle">
-            ⚙️ <span data-i18n="settings">Налаштування</span>
+            <span>⚙️</span> <span data-i18n="settings">Налаштування</span>
         </button>
     </div>
 
